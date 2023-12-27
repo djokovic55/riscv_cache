@@ -1,5 +1,5 @@
 
-bind top checker_cache_top chk_cache_top(
+bind Top checker_cache_top chk_cache_top(
 
   .clock(clock),
   .reset(reset),
@@ -12,5 +12,6 @@ bind top checker_cache_top chk_cache_top(
   .stall(stall),
 
   .hit(hit),
-  .miss(miss)
+  .miss(miss),
+	.cache_state(cache_state)
 );

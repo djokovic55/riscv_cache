@@ -36,7 +36,8 @@ entity top is
 
 		-- new 
 		hit   : out std_logic;
-		miss  : out std_logic
+		miss  : out std_logic;
+		cache_state               : out std_logic_vector(2 downto 0)
 		);
 end top;
 
@@ -78,7 +79,8 @@ component riscv_cache_controller
 		stall                     : out std_logic;
 		-- new
 		hit                       : out std_logic;
-		miss                      : out std_logic
+		miss                      : out std_logic;
+		cache_state               : out std_logic_vector(2 downto 0)
 		);		
 end component;
 
@@ -126,9 +128,12 @@ inst_cache_controller: riscv_cache_controller port map(
 		update                     => update_inter,
 		read_from_mem              => rd_inter_mem,
 		write_to_mem               => wr_inter_mem,
-		-- new
 		mem_addr                   => addr_s,
-		stall                      => stall
+		stall                      => stall,
+		-- new
+		miss                       => miss,
+		hit                        => hit,
+		cache_state                => cache_state
 	);
 
 inst_cache_memory_data_array: cache_memory_data_array port map(

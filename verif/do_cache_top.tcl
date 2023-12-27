@@ -4,10 +4,10 @@ clear -all
 analyze -sv09 checker_cache_top.sv bind_cache_top.sv 
 
 # src
-analyze -vhdl cache_memory_data_array.vhd main_memory.vhd riscv_cache_controller.vhd top.vhd 
+analyze -vhdl ../rtl/cache_memory_data_array.vhd ../rtl/main_memory.vhd ../rtl/riscv_cache_controller.vhd ../rtl/Top.vhd 
 
-elaborate -vhdl -top {top}
+elaborate -vhdl -top {Top} -bbox_a 32768 
 
 clock clock
-reset reset
+reset {not reset}
 prove -bg -all

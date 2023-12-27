@@ -26,7 +26,8 @@ entity riscv_cache_controller is
 		stall                     : out std_logic;
 		-- new
 		hit                       : out std_logic;
-		miss                      : out std_logic
+		miss                      : out std_logic;
+		cache_state               : out std_logic_vector(2 downto 0)
 		); -- signal to stall the processor		  
 end riscv_cache_controller;
 
@@ -71,7 +72,19 @@ architecture behavioral of riscv_cache_controller is
 	signal index_10_reg, index_10_next 	      : std_logic_vector (index_bits+set_offset_bits-1 downto 0);
 	signal index_11_reg, index_11_next 	      : std_logic_vector (index_bits+set_offset_bits-1 downto 0);
 
+	constant IDLE_STATE : std_logic_vector(2 downto 0) := "000";
+	constant COMPARE_TAG_STATE : std_logic_vector(2 downto 0) := "001";
+	constant WRITE_BACK_STATE : std_logic_vector(2 downto 0) := "010";
+	constant ALLOCATE_REFIL_STATE : std_logic_vector(2 downto 0) := "011";
+	constant ALLOCATE_UPDATE_STATE : std_logic_vector(2 downto 0) := "100";
+
 begin
+	-- propagate state to top level
+	cache_state <= IDLE_STATE when state_reg = IDLE else
+								 COMPARE_TAG_STATE when state_reg = COMPARE_TAG else
+								 WRITE_BACK_STATE when state_reg = WRITE_BACK else
+								 ALLOCATE_REFIL_STATE when state_reg = ALLOCATE_REFIL else
+								 ALLOCATE_UPDATE_STATE; 
 
 	latch_request: process(clock, reset) begin
 		if reset = '0' then
@@ -91,8 +104,6 @@ begin
 			end if;
 		end if;
 	end process;
-
-
 
 	sequential_logic: process(clock, reset) begin
 		if reset = '0' then
@@ -227,12 +238,13 @@ begin
 						s_ptr_next(to_integer(unsigned(index))) <= '1';
 						r_ptr_next(to_integer(unsigned(index))) <= not r_ptr_reg(to_integer(unsigned(index)));									 
 						
-						loctn_loc_next <= index & s_ptr_next(to_integer(unsigned(index))) & (not r_ptr_reg(to_integer(unsigned(index))));
+						-- BUG comb loop
+						loctn_loc_next <= index & (not(s_ptr_reg(to_integer(unsigned(index))))) & (not r_ptr_reg(to_integer(unsigned(index))));
 					else
 						s_ptr_next(to_integer(unsigned(index))) <= '0';
 						l_ptr_next(to_integer(unsigned(index))) <= not l_ptr_reg(to_integer(unsigned(index)));
 
-						loctn_loc_next <= index & s_ptr_next(to_integer(unsigned(index))) & (not l_ptr_reg(to_integer(unsigned(index))));
+						loctn_loc_next <= index & (not(s_ptr_reg(to_integer(unsigned(index))))) & (not l_ptr_reg(to_integer(unsigned(index))));
 					end if;	
 				end if;		
 

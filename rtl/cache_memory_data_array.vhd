@@ -35,41 +35,41 @@ type ram is array (0 to 2**(loctn_bits+offset_bits)-1) of STD_LOGIC_VECTOR (mem_
 -- INSTANCE OF CACHE MEMORY
 signal cache_memory : ram := (OTHERS => (OTHERS =>'0'));
 
-begin
-
-process(clock)
--- USER VARIABLES
-variable v0 : STD_LOGIC_VECTOR (loctn_bits+offset_bits-1 downto 0);
-variable v1 : STD_LOGIC_VECTOR (loctn_bits+offset_bits-1 downto 0);
-variable v2 : STD_LOGIC_VECTOR (loctn_bits+offset_bits-1 downto 0);
-variable v3 : STD_LOGIC_VECTOR (loctn_bits+offset_bits-1 downto 0);
-variable v4 : STD_LOGIC_VECTOR (loctn_bits+offset_bits-1 downto 0);
+signal v0 : STD_LOGIC_VECTOR (loctn_bits+offset_bits-1 downto 0);
+signal v1 : STD_LOGIC_VECTOR (loctn_bits+offset_bits-1 downto 0);
+signal v2 : STD_LOGIC_VECTOR (loctn_bits+offset_bits-1 downto 0);
+signal v3 : STD_LOGIC_VECTOR (loctn_bits+offset_bits-1 downto 0);
+signal v4 : STD_LOGIC_VECTOR (loctn_bits+offset_bits-1 downto 0);
 
 begin
--- index here means set plus way location
-if rising_edge(clock) then   
-	v0 := index & offset; 
-	v1 := index & "00";
-	v2 := index & "01";
-	v3 := index & "10";
-	v4 := index & "11";	
-	if update = '1' then    -- HIT, UPDATE CACHE BLOCK USING WORD FROM PROCESSOR	
-		cache_memory(to_integer(unsigned(v0))) <= write_data; 
-	elsif refill = '1' then -- READ MISS, REFILL CACHE BLOCK USING DATA BLOCK FROM MEMORY		   
-		cache_memory(to_integer(unsigned(v1))) <= data_from_mem(blk_0_offset downto blk_1_offset+1);
-		cache_memory(to_integer(unsigned(v2))) <= data_from_mem(blk_1_offset downto blk_2_offset+1);
-		cache_memory(to_integer(unsigned(v3))) <= data_from_mem(blk_2_offset downto blk_3_offset+1);
-		cache_memory(to_integer(unsigned(v4))) <= data_from_mem(blk_3_offset downto 0);
-	end if;	
-	read_data <= cache_memory(to_integer(unsigned(v0))); -- READ WORD FROM CACHE, ALWAYS AVAILABLE
 
-	-- write back data, always available
-	write_back_data(blk_0_offset downto blk_1_offset+1) <= cache_memory(to_integer(unsigned(v1)));
-	write_back_data(blk_1_offset downto blk_2_offset+1) <= cache_memory(to_integer(unsigned(v2)));
-	write_back_data(blk_2_offset downto blk_3_offset+1) <= cache_memory(to_integer(unsigned(v3)));
-	write_back_data(blk_3_offset downto 0)              <= cache_memory(to_integer(unsigned(v4)));
-end if;
-end process;
+	v0 <= index & offset; 
+	v1 <= index & "00";
+	v2 <= index & "01";
+	v3 <= index & "10";
+	v4 <= index & "11";	
+
+	process(clock)
+	begin
+	-- index here means set plus way location
+	if rising_edge(clock) then   
+		if update = '1' then    -- HIT, UPDATE CACHE BLOCK USING WORD FROM PROCESSOR	
+			cache_memory(to_integer(unsigned(v0))) <= write_data; 
+		elsif refill = '1' then -- READ MISS, REFILL CACHE BLOCK USING DATA BLOCK FROM MEMORY		   
+			cache_memory(to_integer(unsigned(v1))) <= data_from_mem(blk_0_offset downto blk_1_offset+1);
+			cache_memory(to_integer(unsigned(v2))) <= data_from_mem(blk_1_offset downto blk_2_offset+1);
+			cache_memory(to_integer(unsigned(v3))) <= data_from_mem(blk_2_offset downto blk_3_offset+1);
+			cache_memory(to_integer(unsigned(v4))) <= data_from_mem(blk_3_offset downto 0);
+		end if;	
+		read_data <= cache_memory(to_integer(unsigned(v0))); -- READ WORD FROM CACHE, ALWAYS AVAILABLE
+
+		-- write back data, always available
+		write_back_data(blk_0_offset downto blk_1_offset+1) <= cache_memory(to_integer(unsigned(v1)));
+		write_back_data(blk_1_offset downto blk_2_offset+1) <= cache_memory(to_integer(unsigned(v2)));
+		write_back_data(blk_2_offset downto blk_3_offset+1) <= cache_memory(to_integer(unsigned(v3)));
+		write_back_data(blk_3_offset downto 0)              <= cache_memory(to_integer(unsigned(v4)));
+	end if;
+	end process;
 
 end Behavioral;
 
