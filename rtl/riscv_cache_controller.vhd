@@ -54,7 +54,7 @@ architecture behavioral of riscv_cache_controller is
 	signal l_ptr_reg, l_ptr_next          : ptr_array := (others => '0'); -- left pointer for each set
 	signal r_ptr_reg, r_ptr_next          : ptr_array := (others => '0'); -- right pointer for each set
 
-	signal stall_reg, stall_next : std_logic;
+	-- signal stall_reg, stall_next : std_logic;
 	signal read_from_mem_reg, read_from_mem_next: std_logic;
 	signal write_to_mem_reg, write_to_mem_next: std_logic;
 	signal refill_reg, refill_next: std_logic;
@@ -113,7 +113,7 @@ begin
 			index_11_reg <= (others => '0'); 
 
 			-- resetting output signals	
-			stall_reg <= '0';
+			-- stall is not registered
 			read_from_mem_reg <= '0';
 			write_to_mem_reg  <= '0';
 			refill_reg <= '0';
@@ -143,7 +143,6 @@ begin
 				index_10_reg <= index_10_next; 
 				index_11_reg <= index_11_next; 
 
-				stall_reg <= stall_next;
 				read_from_mem_reg <= read_from_mem_next;
 				write_to_mem_reg  <= write_to_mem_next ;
 				refill_reg <= refill_next;
@@ -175,7 +174,8 @@ begin
 	index_10_next <= index_10_reg; 
 	index_11_next <= index_11_reg; 
 
-	stall_next <= '0';
+	-- inactive only in IDLE
+	stall <= '1';
 	read_from_mem_next <= '0';
 	write_to_mem_next  <= '0';
 	refill_next <= '0';
@@ -186,6 +186,7 @@ begin
 			-- init state, where all requests start processing
 			-- checks for hit or miss happen in this state
 			-- but no read data available here (if read hit)								
+				stall <= '0';
 
 				temp_tag_next <= '0' & tag;
 				index_00_next <= index & "00";
@@ -195,6 +196,7 @@ begin
 				
 				-- state transition needed only if a read/write request is active
 				if rd = '1' or wr = '1' then
+					stall <= '1';
 					state_next <= compare_tag; -- to hit/miss analyse state
 				end if;
 
@@ -252,6 +254,8 @@ begin
 
 					end if;	
 
+					-- release
+					stall <= '0';
 					state_next <= IDLE;
 				else
 
@@ -259,7 +263,6 @@ begin
 					-- dirty bit is set
 					if(tag_array_next(to_integer(unsigned(loctn_loc_next)))(tag_bits) = '1') then
 						-- main memory access 
-						stall_next <= '1';
 						-- write_to_mem_next <= '1';
 						-- -- form addr of the evicted block to store it back to memory
 						-- mem_addr_next <= tag_array_reg(to_integer(unsigned(loctn_loc_reg)))(tag_bits-1 downto 0)&loctn_loc_reg;
@@ -270,13 +273,11 @@ begin
 						if(wr_req_reg = '1') then
 
 							-- inititate cache update, because of write opp 
-							stall_next <= '1';
 							update_next <= '1';
 							----------------------------------------	
 							state_next <= ALLOCATE_UPDATE;
 							----------------------------------------	
 						else 
-							stall_next <= '1';
 							read_from_mem_next <= '1';
 							----------------------------------------	
 							state_next <= ALLOCATE_REFIL;
@@ -286,7 +287,6 @@ begin
 				end if;
 			when WRITE_BACK =>
 				-- main memory access 
-				stall_next <= '1';
 
 				write_to_mem_next <= '1';
 				-- form addr of the evicted block to store it back to memory
@@ -311,12 +311,13 @@ begin
 				end if;
 
 			when ALLOCATE_REFIL =>
-				-- stall_next <= '1';
 				-- read_from_mem <= '1';
 
 				if(ready = '1') then
 					refill_next <= '1';
 					tag_array_next(to_integer(unsigned(loctn_loc_reg))) <= '0' & tag;
+					-- release
+					stall <= '0';
 					----------------------------------------	
 					state_next <= IDLE;
 					----------------------------------------	
@@ -324,6 +325,8 @@ begin
 			when ALLOCATE_UPDATE =>
 
 				tag_array_next(to_integer(unsigned(loctn_loc_reg))) <= '1' & tag;
+				-- release
+				stall <= '0';
 				----------------------------------------	
 				state_next <= IDLE;
 				----------------------------------------	
@@ -337,7 +340,6 @@ end process;
 	read_from_mem <= read_from_mem_reg;
 	write_to_mem <= write_to_mem_reg;
 	-- write_bck <= write_bck_reg;
-	stall <= stall_reg;
 	mem_addr <= mem_addr_reg;
 
 	hit <= hit_reg;
