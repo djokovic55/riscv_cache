@@ -53,21 +53,21 @@ begin
 	begin
 	-- index here means set plus way location
 	if rising_edge(clock) then   
-		if update = '1' then    -- HIT, UPDATE CACHE BLOCK USING WORD FROM PROCESSOR	
-			cache_memory(to_integer(unsigned(v0))) <= write_data; 
-		elsif refill = '1' then -- READ MISS, REFILL CACHE BLOCK USING DATA BLOCK FROM MEMORY		   
-			cache_memory(to_integer(unsigned(v1))) <= data_from_mem(blk_0_offset downto blk_1_offset+1);
-			cache_memory(to_integer(unsigned(v2))) <= data_from_mem(blk_1_offset downto blk_2_offset+1);
-			cache_memory(to_integer(unsigned(v3))) <= data_from_mem(blk_2_offset downto blk_3_offset+1);
-			cache_memory(to_integer(unsigned(v4))) <= data_from_mem(blk_3_offset downto 0);
-		end if;	
-		read_data <= cache_memory(to_integer(unsigned(v0))); -- READ WORD FROM CACHE, ALWAYS AVAILABLE
+	  if update = '1' then    -- HIT, UPDATE CACHE BLOCK USING WORD FROM PROCESSOR	
+		  cache_memory(to_integer(unsigned(v0))) <= write_data; 
+	  elsif refill = '1' then -- READ MISS, REFILL CACHE BLOCK USING DATA BLOCK FROM MEMORY		   
+		  cache_memory(to_integer(unsigned(v1))) <= data_from_mem(blk_0_offset downto blk_1_offset+1);
+		  cache_memory(to_integer(unsigned(v2))) <= data_from_mem(blk_1_offset downto blk_2_offset+1);
+		  cache_memory(to_integer(unsigned(v3))) <= data_from_mem(blk_2_offset downto blk_3_offset+1);
+		  cache_memory(to_integer(unsigned(v4))) <= data_from_mem(blk_3_offset downto 0);
+	  end if;	
+	  read_data <= cache_memory(to_integer(unsigned(v0))); -- READ WORD FROM CACHE, ALWAYS AVAILABLE
 
-		-- write back data, always available
-		write_back_data(blk_0_offset downto blk_1_offset+1) <= cache_memory(to_integer(unsigned(v1)));
-		write_back_data(blk_1_offset downto blk_2_offset+1) <= cache_memory(to_integer(unsigned(v2)));
-		write_back_data(blk_2_offset downto blk_3_offset+1) <= cache_memory(to_integer(unsigned(v3)));
-		write_back_data(blk_3_offset downto 0)              <= cache_memory(to_integer(unsigned(v4)));
+	  -- write back data, always available
+	  write_back_data(blk_0_offset downto blk_1_offset+1) <= cache_memory(to_integer(unsigned(v1)));
+	  write_back_data(blk_1_offset downto blk_2_offset+1) <= cache_memory(to_integer(unsigned(v2)));
+	  write_back_data(blk_2_offset downto blk_3_offset+1) <= cache_memory(to_integer(unsigned(v3)));
+	  write_back_data(blk_3_offset downto 0)              <= cache_memory(to_integer(unsigned(v4)));
 	end if;
 	end process;
 

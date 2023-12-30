@@ -275,9 +275,9 @@ begin
 					-- dirty bit is set
 					if(tag_array_next(to_integer(unsigned(loctn_loc_next)))(tag_bits) = '1') then
 						-- main memory access 
-						-- write_to_mem_next <= '1';
-						-- -- form addr of the evicted block to store it back to memory
-						-- mem_addr_next <= tag_array_reg(to_integer(unsigned(loctn_loc_reg)))(tag_bits-1 downto 0)&loctn_loc_reg;
+						write_to_mem_next <= '1';
+						-- form addr of the evicted block to store it back to memory
+						mem_addr_next <= tag_array_reg(to_integer(unsigned(loctn_loc_reg)))(tag_bits-1 downto 0)&loctn_loc_reg;
 						----------------------------------------	
 						state_next <= WRITE_BACK;
 						----------------------------------------	
@@ -300,9 +300,10 @@ begin
 			when WRITE_BACK =>
 				-- main memory access 
 
-				write_to_mem_next <= '1';
+				-- write_to_mem_next <= '1';
+				
 				-- form addr of the evicted block to store it back to memory
-				mem_addr_next <= tag_array_reg(to_integer(unsigned(loctn_loc_reg)))(tag_bits-1 downto 0)&loctn_loc_reg;
+				-- mem_addr_next <= tag_array_reg(to_integer(unsigned(loctn_loc_reg)))(tag_bits-1 downto 0)&loctn_loc_reg;
 				if(ready = '1') then
 					if(rd_req_reg = '1') then
 

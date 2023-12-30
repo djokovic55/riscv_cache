@@ -40,6 +40,11 @@ type ram is array (0 to 2**addr_width-1) of STD_LOGIC_VECTOR (word_size-1 downto
 signal ram_s : ram;
 signal addr_temp : std_logic_vector(addr_width-1 downto 0);
 signal zero_temp: std_logic_vector(1 downto 0);
+signal cnt_delay_reg, cnt_delay_next : std_logic_vector(3 downto 0);
+
+type state_t is (IDLE, BUSY);
+
+signal state_reg, state_next  : state_t := idle; -- state signal
 
 begin
 
@@ -57,27 +62,50 @@ begin
 			ram_s(to_integer(unsigned(addr_temp)+1)) <= data_in(95 downto 64);  -- SYNCHRONOUS WRITE
 			ram_s(to_integer(unsigned(addr_temp)))   <= data_in(127 downto 96);  -- SYNCHRONOUS WRITE
 		end if;
-
-		data_out(31 downto 0)   <= ram_s(to_integer(unsigned(addr_temp)+3)) ;  -- SYNCHRONOUS READ
-		data_out(63 downto 32)  <= ram_s(to_integer(unsigned(addr_temp)+2)) ;  -- SYNCHRONOUS READ
-		data_out(95 downto 64)  <= ram_s(to_integer(unsigned(addr_temp)+1)) ;  -- SYNCHRONOUS READ
-		data_out(127 downto 96) <= ram_s(to_integer(unsigned(addr_temp))) ;  -- SYNCHRONOUS READ
+	  data_out(31 downto 0)   <= ram_s(to_integer(unsigned(addr_temp)+3)) ;  -- ASYNCHRONOUS READ
+	  data_out(63 downto 32)  <= ram_s(to_integer(unsigned(addr_temp)+2)) ;  -- ASYNCHRONOUS READ
+	  data_out(95 downto 64)  <= ram_s(to_integer(unsigned(addr_temp)+1)) ;  -- ASYNCHRONOUS READ
+	  data_out(127 downto 96) <= ram_s(to_integer(unsigned(addr_temp))) ;  -- ASYNCHRONOUS READ
 	end if;
 end process;
 
+
+-- memory latency model
 process(clock,reset)
 begin
 if reset = '0' then -- ACTIVE LOW ASYNC RESET
-   data_ready <= '0';
-elsif rising_edge(clock) then
-	if wr = '1' then
-		data_ready <= '1'; -- DATA IS WRITTEN, ACKNOWLDGE THE PROCESSOR
-	elsif rd = '1' then
-		data_ready <= '1'; -- DATA CAN BE READ, ACKNOWLEDGE THE PROCESSOR
-	else
-		data_ready <= '0';
-	end if;
+   state_reg <= IDLE;
+   cnt_delay_reg <= (others => '0');
+else
+  if rising_edge(clock) then
+   state_reg <= state_next;
+   cnt_delay_reg <= cnt_delay_next;
+  end if;
 end if;
+end process;
+
+
+process(state_reg, state_next, wr, rd)
+begin
+   cnt_delay_next <= cnt_delay_reg;
+   state_next <= state_reg;
+   data_ready <= '0';
+
+  case state_reg is		
+    when IDLE  => 
+      if(wr = '1' or rd = '1') then
+	state_next <= BUSY;
+      end if;
+    when BUSY  => 
+      cnt_delay_next <= std_logic_vector(unsigned(cnt_delay_reg) + 1);
+      if(cnt_delay_reg = "1010") then
+	cnt_delay_next <= (others => '0');
+	data_ready <= '1';
+
+	state_next <= IDLE;
+      end if;
+    when others =>
+  end case;
 end process;
 
 end Behavioral;

@@ -1,0 +1,423 @@
+$date Wed Dec 27 18:07:45 2023
+ $end
+$version JasperGold $end
+$timescale 1 ns $end
+$scope module top $end
+$scope module inst_cache_memory_data_array $end
+$var wire 1 ! refill $end
+$var wire 1 " update $end
+$var wire 4 # index [3:0] $end
+$var wire 2 $ offset [1:0] $end
+$var wire 128 % data_from_mem [127:0] $end
+$var wire 32 & write_data [31:0] $end
+$var reg 32 ' \cache_memory(0) [31:0] $end
+$var reg 32 ( \cache_memory(6) [31:0] $end
+$var reg 32 ) \cache_memory(10) [31:0] $end
+$var reg 32 * \cache_memory(11) [31:0] $end
+$var reg 32 + \cache_memory(12) [31:0] $end
+$var reg 6 , v0 [5:0] $end
+$var reg 6 - v1 [5:0] $end
+$var reg 6 . v2 [5:0] $end
+$var reg 6 / v3 [5:0] $end
+$var reg 6 0 v4 [5:0] $end
+$var wire 1 1 clock $end
+$upscope $end
+$scope module inst_cache_controller $end
+$var wire 1 2 reset $end
+$var wire 1 3 flush $end
+$var wire 1 4 rd $end
+$var wire 1 5 wr $end
+$var wire 2 6 index [1:0] $end
+$var wire 6 7 tag [5:0] $end
+$var wire 1 8 ready $end
+$var wire 4 9 loctn [3:0] $end
+$var wire 1 : refill $end
+$var wire 1 ; update $end
+$var wire 1 < read_from_mem $end
+$var wire 1 = write_to_mem $end
+$var wire 1 > hit $end
+$var reg 3 ? state_reg [2:0] $end
+$var wire 3 @ state_next [2:0] $end
+$var reg 1 A hit_reg $end
+$var wire 1 B hit_next $end
+$var reg 4 C loctn_loc_reg [3:0] $end
+$var wire 4 D loctn_loc_next [3:0] $end
+$var reg 7 E \tag_array_reg(0) [6:0] $end
+$var reg 7 F \tag_array_reg(1) [6:0] $end
+$var reg 7 G \tag_array_reg(2) [6:0] $end
+$var reg 7 H \tag_array_reg(3) [6:0] $end
+$var reg 7 I \tag_array_reg(4) [6:0] $end
+$var reg 7 J \tag_array_reg(5) [6:0] $end
+$var reg 7 K \tag_array_reg(6) [6:0] $end
+$var reg 7 L \tag_array_reg(7) [6:0] $end
+$var reg 7 M \tag_array_reg(8) [6:0] $end
+$var reg 7 N \tag_array_reg(9) [6:0] $end
+$var reg 7 O \tag_array_reg(10) [6:0] $end
+$var reg 7 P \tag_array_reg(11) [6:0] $end
+$var reg 7 Q \tag_array_reg(12) [6:0] $end
+$var reg 7 R \tag_array_reg(13) [6:0] $end
+$var reg 7 S \tag_array_reg(14) [6:0] $end
+$var reg 7 T \tag_array_reg(15) [6:0] $end
+$var wire 7 U \tag_array_next(0) [6:0] $end
+$var wire 7 V \tag_array_next(1) [6:0] $end
+$var wire 7 W \tag_array_next(2) [6:0] $end
+$var wire 7 X \tag_array_next(3) [6:0] $end
+$var wire 7 Y \tag_array_next(4) [6:0] $end
+$var wire 7 Z \tag_array_next(5) [6:0] $end
+$var wire 7 [ \tag_array_next(6) [6:0] $end
+$var wire 7 \ \tag_array_next(7) [6:0] $end
+$var wire 7 ] \tag_array_next(8) [6:0] $end
+$var wire 7 ^ \tag_array_next(9) [6:0] $end
+$var wire 7 _ \tag_array_next(10) [6:0] $end
+$var wire 7 ` \tag_array_next(11) [6:0] $end
+$var wire 7 a \tag_array_next(12) [6:0] $end
+$var wire 7 b \tag_array_next(13) [6:0] $end
+$var wire 7 c \tag_array_next(14) [6:0] $end
+$var wire 7 d \tag_array_next(15) [6:0] $end
+$var reg 4 e s_ptr_reg [0:3] $end
+$var wire 4 f s_ptr_next [0:3] $end
+$var reg 4 g l_ptr_reg [0:3] $end
+$var wire 4 h l_ptr_next [0:3] $end
+$var reg 4 i r_ptr_reg [0:3] $end
+$var wire 4 j r_ptr_next [0:3] $end
+$var reg 1 k read_from_mem_reg $end
+$var wire 1 l read_from_mem_next $end
+$var reg 1 m write_to_mem_reg $end
+$var wire 1 n write_to_mem_next $end
+$var reg 1 o refill_reg $end
+$var wire 1 p refill_next $end
+$var reg 1 q update_reg $end
+$var wire 1 r update_next $end
+$var reg 1 s wr_req_reg $end
+$var reg 1 t rd_req_reg $end
+$var reg 7 u temp_tag_reg [6:0] $end
+$var wire 7 v temp_tag_next [6:0] $end
+$var reg 4 w index_00_reg [3:0] $end
+$var wire 4 x index_00_next [3:0] $end
+$var reg 4 y index_01_reg [3:0] $end
+$var wire 4 z index_01_next [3:0] $end
+$var reg 4 { index_10_reg [3:0] $end
+$var wire 4 | index_10_next [3:0] $end
+$var reg 4 } index_11_reg [3:0] $end
+$var wire 4 ~ index_11_next [3:0] $end
+$var wire 1 !! clock $end
+$upscope $end
+$scope module inst_main_memory_system $end
+$scope module ram_s $end
+$var wire 32 "! read_data_0_0 [31:0] $end
+$var wire 32 #! read_data_0_1 [31:0] $end
+$var wire 32 $! read_data_0_2 [31:0] $end
+$var wire 32 %! read_data_0_3 [31:0] $end
+$upscope $end
+$var wire 1 &! reset $end
+$var wire 1 '! rd $end
+$var wire 1 (! wr $end
+$var reg 128 )! data_out [127:0] $end
+$var reg 1 *! data_ready $end
+$var wire 1 +! clock $end
+$upscope $end
+$var wire 1 ,! reset $end
+$var wire 32 -! addr [31:0] $end
+$var wire 32 .! wdata [31:0] $end
+$var wire 1 /! flush $end
+$var wire 1 0! rd $end
+$var wire 1 1! wr $end
+$var wire 1 2! hit $end
+$var wire 10 3! addr_local [9:0] $end
+$var wire 1 4! ready_inter $end
+$var wire 128 5! data_from_mem_inter [127:0] $end
+$var wire 1 6! rd_inter_mem $end
+$var wire 1 7! wr_inter_mem $end
+$var wire 1 8! refill_inter $end
+$var wire 1 9! update_inter $end
+$var wire 4 :! index_inter [3:0] $end
+$var reg 1 ;! \chk_cache_top.cov_rd_hit $end
+$var wire 1 <! \:jasper_formal_reset $end
+$var wire 1 =! clock $end
+$var wire 1 >! \:jasper_formal_clock $end
+$upscope $end
+$enddefinitions $end
+#0
+0!
+0"
+b0000 #
+b00 $
+b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 %
+b00000000000000000000000000001010 &
+b00000000000000000000000000000000 '
+b00000000000000000000000000000000 (
+b00000000000000000000000000000000 )
+b00000000000000000000000000000000 *
+b00000000000000000000000000000000 +
+b000000 ,
+b000000 -
+b000001 .
+b000010 /
+b000011 0
+11
+12
+03
+04
+15
+b01 6
+b001000 7
+08
+b0000 9
+0:
+0;
+0<
+0=
+0>
+b000 ?
+b001 @
+0A
+0B
+b0000 C
+b0000 D
+b0000000 E
+b0000000 F
+b0000000 G
+b0000000 H
+b0000000 I
+b0000000 J
+b0000000 K
+b0000000 L
+b0000000 M
+b0000000 N
+b0000000 O
+b0000000 P
+b0000000 Q
+b0000000 R
+b0000000 S
+b0000000 T
+b0000000 U
+b0000000 V
+b0000000 W
+b0000000 X
+b0000000 Y
+b0000000 Z
+b0000000 [
+b0000000 \
+b0000000 ]
+b0000000 ^
+b0000000 _
+b0000000 `
+b0000000 a
+b0000000 b
+b0000000 c
+b0000000 d
+b0000 e
+b0000 f
+b0000 g
+b0000 h
+b0000 i
+b0000 j
+0k
+0l
+0m
+0n
+0o
+0p
+0q
+0r
+0s
+0t
+b0000000 u
+b0001000 v
+b0000 w
+b0100 x
+b0000 y
+b0101 z
+b0000 {
+b0110 |
+b0000 }
+b0111 ~
+1!!
+b00000000000000000000000000000000 "!
+b00000000000000000000000000000000 #!
+b00000000000000000000000000000000 $!
+b00000000000000000000000000000000 %!
+1&!
+0'!
+0(!
+b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 )!
+0*!
+1+!
+1,!
+b00000000000000000000000010000100 -!
+b00000000000000000000000000001010 .!
+0/!
+00!
+11!
+02!
+b0010000100 3!
+04!
+b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 5!
+06!
+07!
+08!
+09!
+b0000 :!
+0;!
+0<!
+1=!
+1>!
+#5
+01
+0!!
+0+!
+0=!
+0>!
+#10
+b00000000000000000000000000001100 &
+11
+14
+05
+b00 6
+b001 ?
+b011 @
+b0011 D
+b1000 f
+b1000 j
+1r
+1s
+b0001000 u
+b0100 w
+b0101 y
+b0110 {
+b0111 }
+1!!
+1+!
+b00000000000000000000000010000000 -!
+b00000000000000000000000000001100 .!
+10!
+01!
+b0010000000 3!
+1=!
+1>!
+#15
+01
+0!!
+0+!
+0=!
+0>!
+#20
+1"
+b0011 #
+11
+b100000 7
+b0011 9
+1;
+b011 ?
+b000 @
+b0011 C
+b1100000 X
+b1000 e
+b1000 i
+1q
+0r
+1!!
+1+!
+b00000000000000000000001000000000 -!
+b1000000000 3!
+19!
+b0011 :!
+1=!
+1>!
+#25
+01
+0!!
+0+!
+0=!
+0>!
+#30
+0"
+b00000000000000000000000000001100 '
+b001100 ,
+b001100 -
+b001101 .
+b001110 /
+b001111 0
+11
+0;
+b000 ?
+b001 @
+b1100000 H
+0q
+b0100000 v
+b0000 x
+b0001 z
+b0010 |
+b0011 ~
+1!!
+1+!
+09!
+1=!
+1>!
+#35
+01
+0!!
+0+!
+0=!
+0>!
+#40
+11
+04
+15
+b01 6
+b010000 7
+b001 ?
+b000 @
+1B
+b1100 f
+b1100 j
+0s
+1t
+b0100000 u
+b0000 w
+b0001 y
+b0010 {
+b0011 }
+1!!
+1+!
+b00000000000000000000000100000100 -!
+00!
+11!
+b0100000100 3!
+1=!
+1>!
+#45
+01
+0!!
+0+!
+0=!
+0>!
+#50
+11
+14
+1>
+b000 ?
+b001 @
+1A
+0B
+b1100 e
+b1100 i
+b0010000 v
+b0100 x
+b0101 z
+b0110 |
+b0111 ~
+1!!
+1+!
+10!
+12!
+1;!
+1=!
+1>!
+#55
+01
+0!!
+0+!
+0=!
+0>!
+#60
